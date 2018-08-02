@@ -6,17 +6,16 @@ contract Wager {
     string public stock_symbol;
     string public operator;
     address public bet_admin;
-    struct Participant {
-        string name;
-        uint value;
-        address recipient;
-        bool side;
-    }
-    address[] public willOccur;
-    address[] public willNotOccur;
-    Participant[] public participants;
+    mapping(address => uint) willOccur;
+    mapping(address => uint) willNotOccur;
+    address[] public willOccurList;
+    address[] public willNotOccurList;
+    uint willOccurAmount;
+    uint willNotOccurAmount;
 
-    constructor(string name_ , string description_ , string stock_symbol_ , string operator_) public {
+    event Log(uint);
+
+    constructor(string name_ , string description_ , string stock_symbol_ , string operator_) public payable {
         name = name_;
         description = description_;
         stock_symbol = stock_symbol_;
@@ -30,24 +29,36 @@ contract Wager {
     }
 
     function participate(string name_ , bool side_) public payable {
-        Participant memory newParticipant = Participant({
-           name: name_,
-           value: msg.value,
-           recipient: msg.sender,
-           side: side_
-        });
-
         if (side_){
-            willOccur.push(msg.sender);
+            willOccur[msg.sender] += msg.value;
+            willOccurList.push(msg.sender);
+            willOccurAmount += msg.value;
         }else{
-            willNotOccur.push(msg.sender);
+            willNotOccur[msg.sender] += msg.value;
+            willNotOccurList.push(msg.sender);
+            willNotOccurAmount += msg.value;
         }
-
-        participants.push(newParticipant);
     }
 
-    function getWinningAmount() public returns(uint){
+    function getWinningAmount() public view returns(uint){
         return address(this).balance;
+    }
+
+    function declareWinner(bool won) public restricted payable {
+        uint total_amount = address(this).balance-address(this).balance/20;
+        if (won){
+            for (uint i=0; i<willOccurList.length; i++) {
+              uint amount_won = (willOccur[willOccurList[i]]/willOccurAmount)*total_amount;
+              Log(amount_won);
+              willOccurList[i].send(amount_won);
+            }
+        }else{
+            for (i=0; i<willOccurList.length; i++) {
+              amount_won = (willNotOccur[willNotOccurList[i]]/willNotOccurAmount)*total_amount;
+              willNotOccurList[i].send(amount_won);
+            }
+        }
+
     }
 
 }
