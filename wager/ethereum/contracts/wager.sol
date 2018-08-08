@@ -34,7 +34,7 @@ contract Wager {
     uint willOccurAmount;
     uint willNotOccurAmount;
 
-    bool ended;
+    bool public ended;
 
     event Log(uint);
 
@@ -52,22 +52,29 @@ contract Wager {
         _;
     }
 
-    function getDetails() public returns (string, address, uint){
+    function getDetails() public returns (string, address, uint, address[], address[],bool){
         return (
                 description,
                 bet_admin,
-                this.balance
+                this.balance,
+                willOccurList,
+                willNotOccurList,
+                ended
             );
     }
 
     function participate(bool side_) public payable {
         if (side_){
+            if (willOccur[msg.sender] == 0 ){
+                willOccurList.push(msg.sender);
+            }
             willOccur[msg.sender] += msg.value;
-            willOccurList.push(msg.sender);
             willOccurAmount += msg.value;
         }else{
+            if (willNotOccur[msg.sender] == 0 ){
+                willNotOccurList.push(msg.sender);
+            }
             willNotOccur[msg.sender] += msg.value;
-            willNotOccurList.push(msg.sender);
             willNotOccurAmount += msg.value;
         }
     }
@@ -106,5 +113,7 @@ contract Wager {
             }
         }
         bet_admin.transfer(address(this).balance);
+        ended = true;
     }
+
 }
