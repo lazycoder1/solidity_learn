@@ -25,43 +25,43 @@ class WagerShow extends Component {
         };
     }
 
-    renderDescCard() {
-        const { description, end } = this.props;
-        let status = "Its over";
-        if (!end) {
-            status = "On Going";
-        }
-        const item = [
-            {
-                header: description,
-                meta: "desc",
-                description: "What is this wager about ?"
-            },
-            {
-                header: status,
-                meta: "status",
-                description: "Has the wager ended ?"
-            }
-        ];
-        return <Card.Group items={item} />;
-    }
-
     renderCards() {
         const {
             description,
             bet_admin,
             balance,
             willOccurList,
-            willNotOccurList
+            willNotOccurList,
+            end
         } = this.props;
 
+        let status = "Its over";
+        let backgroundColor = "red";
+        if (!end) {
+            status = "On Going";
+            backgroundColor = "green";
+        }
+
         const items = [
+            {
+                header: description,
+                meta: "desc",
+                description: "What is this wager about ?",
+                fluid: true
+            },
             {
                 header: bet_admin,
                 meta: "Address of Manager",
                 description:
                     "The Manager who created this wager and call the winning side!",
-                style: { overflowWrap: "break-word" }
+                style: { overflowWrap: "break-word" },
+                fluid: true
+            },
+            {
+                header: status,
+                meta: "status",
+                description: "Has the wager ended ?",
+                style: { backgroundColor: backgroundColor }
             },
             {
                 header: web3.utils.fromWei(String(balance * 0.95), "ether"),
@@ -84,20 +84,18 @@ class WagerShow extends Component {
     }
 
     render() {
+        const { end } = this.props;
         console.log("test");
         return (
             <Layout>
                 <h3>Wager Show</h3>
                 <Grid>
-                    <Grid.Column width={10}>
-                        {this.renderDescCard()}
-                        {this.renderCards()}
-                    </Grid.Column>
+                    <Grid.Column width={10}>{this.renderCards()}</Grid.Column>
                     <Grid.Column width={6}>
-                        <WagerForm address={this.props.address} />
+                        <WagerForm address={this.props.address} end={end} />
                     </Grid.Column>
                 </Grid>
-                <DeclareWinner address={this.props.address} />
+                <DeclareWinner address={this.props.address} end={end} />
             </Layout>
         );
     }

@@ -5,13 +5,19 @@
     "main": "index.js",
     "scripts": {
         "test": "mocha",
-        "dev": "node server.js"
+        "dev": "node server_new.js",
+        "appengine": "gcloud app deploy",
+        "build": "next build",
+        "start": "NODE_ENV=production node server_new.js"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "express": "^4.16.3",
         "fs-extra": "^7.0.0",
         "ganache-cli": "^6.1.6",
+        "ipfs-api": "^23.0.0",
+        "jss": "^9.8.7",
         "mocha": "^5.2.0",
         "next": "^4.1.4",
         "next-routes": "^1.4.2",
@@ -21,5 +27,8 @@
         "solc": "^0.4.24",
         "truffle-hdwallet-provider": "0.0.6",
         "web3": "^1.0.0-beta.26"
+    },
+    "devDependencies": {
+        "webpack": "^4.16.5"
     }
 }

@@ -31,6 +31,10 @@ class WagerForm extends Component {
         this.setState({ loading: true, errorMessage: "" });
 
         try {
+            if (this.props.end) {
+                const err = new Error("This wager has ended !");
+                throw err;
+            }
             const accounts = await web3.eth.getAccounts();
             await wager.methods.participate(participate).send({
                 from: accounts[0],

@@ -1,13 +1,14 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.20;
+import "github.com/oraclize/ethereum-api/oraclizeAPI.sol";
 
 contract WagerFactory {
     mapping(address=>address[]) public adminToWagers;
-	address[] public deployedWagers;
+    address[] public deployedWagers;
 
     function createWager(string description_) public returns (address){
-        address tempWager = new Wager("BTC Wager",description_,"BTC","<",msg.sender);
+        address tempWager = new Wager("json(https://api.pro.coinbase.com/products/BTC-USD/ticker).price",60,description_,"BTC","<",msg.sender);
         adminToWagers[msg.sender].push(tempWager);
-		deployedWagers.push(tempWager);
+        deployedWagers.push(tempWager);
         return tempWager;
     }
 
@@ -15,13 +16,16 @@ contract WagerFactory {
         return adminToWagers[admin_address][adminToWagers[admin_address].length-1];
     }
 
-	function getAllCampaigns() public returns (address[]){
-		return deployedWagers;
-	}
+    function getAllCampaigns() public returns (address[]){
+        return deployedWagers;
+    }
 }
 
-contract Wager {
-    string public name;
+contract Wager is usingOraclize {
+    string public json_query;
+    uint public afterSeconds;
+    uint public final_value;
+    uint public bet_value;
     string public description;
     string public stock_symbol;
     string public operator;
@@ -37,9 +41,11 @@ contract Wager {
     bool public ended;
 
     event Log(uint);
+    event OraclizeQueryExecuted(string);
 
-    constructor(string name_ , string description_ , string stock_symbol_ , string operator_, address bet_admin_) public payable {
-        name = name_;
+    constructor(string json_query_, uint after_, string description_ , string stock_symbol_ , string operator_, address bet_admin_) public payable {
+        json_query = json_query_;
+        afterSeconds = after_;
         description = description_;
         stock_symbol = stock_symbol_;
         operator = operator_;
@@ -52,6 +58,30 @@ contract Wager {
         _;
     }
 
+    function __callback(bytes32 myid, string result) {
+        if (msg.sender != oraclize_cbAddress()) throw;
+        OraclizeQueryExecuted('result got');
+        final_value = parseInt(result);
+        if (operator == ">"){
+            if (final_value >= bet_value){
+                declareWinner(true);
+            }else{
+                declareWinner(false);
+            }
+        }else {
+            if (final_value <= bet_value){
+                declareWinner(true);
+            }else{
+                declareWinner(false);
+            }
+        }
+            
+    }
+    
+    function fetchData() public payable {
+        oraclize_query(afterSeconds,"URL", json_query);
+    }
+    
     function getDetails() public returns (string, address, uint, address[], address[],bool){
         return (
                 description,

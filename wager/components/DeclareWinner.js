@@ -30,6 +30,10 @@ class DeclareWinner extends Component {
         const wager = Wager(this.props.address);
         console.log(eventOccured);
         try {
+            if (this.props.end) {
+                const err = new Error("This wager has ended !");
+                throw err;
+            }
             const accounts = await web3.eth.getAccounts();
             await wager.methods.declareWinner(eventOccured).send({
                 from: accounts[0],

@@ -50,9 +50,6 @@ var _routes = require("../routes");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _jsxFileName = "/home/gautam/projects/solidity_learn/wager/components/DeclareWinner.js";
-
-
 var options = [{ key: "y", text: "yes", value: "yes" }, { key: "n", text: "no", value: "no" }];
 
 var DeclareWinner = function (_Component) {
@@ -79,7 +76,7 @@ var DeclareWinner = function (_Component) {
             return _this.setState({ choose: value });
         }, _this.onSubmit = function () {
             var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(event) {
-                var eventOccured, wager, accounts;
+                var eventOccured, wager, err, accounts;
                 return _regenerator2.default.wrap(function _callee$(_context) {
                     while (1) {
                         switch (_context.prev = _context.next) {
@@ -97,34 +94,44 @@ var DeclareWinner = function (_Component) {
 
                                 console.log(eventOccured);
                                 _context.prev = 6;
-                                _context.next = 9;
+
+                                if (!_this.props.end) {
+                                    _context.next = 10;
+                                    break;
+                                }
+
+                                err = new Error("This wager has ended !");
+                                throw err;
+
+                            case 10:
+                                _context.next = 12;
                                 return _web2.default.eth.getAccounts();
 
-                            case 9:
+                            case 12:
                                 accounts = _context.sent;
-                                _context.next = 12;
+                                _context.next = 15;
                                 return wager.methods.declareWinner(eventOccured).send({
                                     from: accounts[0],
                                     value: _web2.default.utils.toWei("0.0001", "ether")
                                 });
 
-                            case 12:
+                            case 15:
                                 _routes.Router.replaceRoute("/wagers/" + _this.props.address);
-                                _context.next = 18;
+                                _context.next = 21;
                                 break;
 
-                            case 15:
-                                _context.prev = 15;
+                            case 18:
+                                _context.prev = 18;
                                 _context.t0 = _context["catch"](6);
 
                                 _this.setState({ errorMessage: _context.t0.message });
 
-                            case 18:
+                            case 21:
                             case "end":
                                 return _context.stop();
                         }
                     }
-                }, _callee, _this2, [[6, 15]]);
+                }, _callee, _this2, [[6, 18]]);
             }));
 
             return function (_x) {
@@ -136,44 +143,18 @@ var DeclareWinner = function (_Component) {
     (0, _createClass3.default)(DeclareWinner, [{
         key: "render",
         value: function render() {
-            return _react2.default.createElement(_semanticUiReact.Form, { onSubmit: this.onSubmit, error: !!this.state.errorMessage, __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 46
-                }
-            }, _react2.default.createElement(_semanticUiReact.Form.Group, {
-                __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 47
-                }
-            }, _react2.default.createElement(_semanticUiReact.Form.Field, {
-                __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 48
-                }
-            }, _react2.default.createElement(_semanticUiReact.Form.Select, {
+            return _react2.default.createElement(_semanticUiReact.Form, { onSubmit: this.onSubmit, error: !!this.state.errorMessage }, _react2.default.createElement(_semanticUiReact.Form.Group, null, _react2.default.createElement(_semanticUiReact.Form.Field, null, _react2.default.createElement(_semanticUiReact.Form.Select, {
                 value: this.state.choose,
                 onChange: this.handleChange,
                 fluid: true,
                 label: "Did the event occur ?",
                 options: options,
-                placeholder: "0.0001 ether will be charged",
-                __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 49
-                }
+                placeholder: "0.0001 ether will be charged"
             }))), _react2.default.createElement(_semanticUiReact.Message, {
                 error: true,
                 header: "Oops!",
-                content: this.state.errorMessage,
-                __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 60
-                }
-            }), _react2.default.createElement(_semanticUiReact.Button, { primary: true, loading: this.state.loading, __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 65
-                }
-            }, "Declare"));
+                content: this.state.errorMessage
+            }), _react2.default.createElement(_semanticUiReact.Button, { primary: true, loading: this.state.loading }, "Declare"));
         }
     }]);
 
@@ -181,4 +162,3 @@ var DeclareWinner = function (_Component) {
 }(_react.Component);
 
 exports.default = DeclareWinner;
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNvbXBvbmVudHMvRGVjbGFyZVdpbm5lci5qcyJdLCJuYW1lcyI6WyJSZWFjdCIsIkNvbXBvbmVudCIsIkZvcm0iLCJJbnB1dCIsIk1lc3NhZ2UiLCJCdXR0b24iLCJDYXJkIiwiSW1hZ2UiLCJXYWdlciIsIndlYjMiLCJSb3V0ZXIiLCJvcHRpb25zIiwia2V5IiwidGV4dCIsInZhbHVlIiwiRGVjbGFyZVdpbm5lciIsInN0YXRlIiwiY2hvb3NlIiwiZXJyb3JNZXNzYWdlIiwibG9hZGluZyIsImhhbmRsZUNoYW5nZSIsImUiLCJzZXRTdGF0ZSIsIm9uU3VibWl0IiwiZXZlbnQiLCJwcmV2ZW50RGVmYXVsdCIsImV2ZW50T2NjdXJlZCIsImNvbnNvbGUiLCJsb2ciLCJ3YWdlciIsInByb3BzIiwiYWRkcmVzcyIsImV0aCIsImdldEFjY291bnRzIiwiYWNjb3VudHMiLCJtZXRob2RzIiwiZGVjbGFyZVdpbm5lciIsInNlbmQiLCJmcm9tIiwidXRpbHMiLCJ0b1dlaSIsInJlcGxhY2VSb3V0ZSIsIm1lc3NhZ2UiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7QUFBQSxBQUFPLEFBQVM7Ozs7QUFDaEIsQUFBUyxBQUFNLEFBQU8sQUFBUyxBQUFRLEFBQU07O0FBQzdDLEFBQU8sQUFBVzs7OztBQUNsQixBQUFPLEFBQVU7Ozs7QUFDakIsQUFBUyxBQUFjOzs7Ozs7O0FBRXZCLElBQU0sVUFBVSxDQUNaLEVBQUUsS0FBRixBQUFPLEtBQUssTUFBWixBQUFrQixPQUFPLE9BRGIsQUFDWixBQUFnQyxTQUNoQyxFQUFFLEtBQUYsQUFBTyxLQUFLLE1BQVosQUFBa0IsTUFBTSxPQUY1QixBQUFnQixBQUVaLEFBQStCOztJLEFBRzdCOzs7Ozs7Ozs7Ozs7Ozs7OE5BQ0YsQTtvQkFBUSxBQUNJLEFBQ1I7MEJBRkksQUFFVSxBQUNkO3FCQUhJLEFBR0ssQTtBQUhMLEFBQ0osaUJBS0osQSxlQUFlLFVBQUEsQUFBQyxVQUFEO2dCQUFBLEFBQU0sY0FBTixBQUFNO21CQUFZLE1BQUEsQUFBSyxTQUFTLEVBQUUsUUFBbEMsQUFBa0IsQUFBYyxBQUFVO0EsaUJBRXpELEE7aUdBQVcsaUJBQUEsQUFBTSxPQUFOO3lDQUFBOzhFQUFBOzhCQUFBO3lEQUFBO2lDQUNQO3NDQUFBLEFBQU0sQUFDRjtBQUZHLCtDQUFBLEFBRVksQUFDbkI7O3dDQUFBLEFBQVEsSUFBSSxNQUFBLEFBQUssTUFBakIsQUFBdUIsQUFDdkI7b0NBQUksTUFBQSxBQUFLLE1BQUwsQUFBVyxVQUFmLEFBQXlCLE9BQU8sQUFDNUI7bURBQUEsQUFBZSxBQUNsQjtBQUZELHVDQUVPLEFBQ0g7bURBQUEsQUFBZSxBQUNsQjtBQUNLO0FBVEMsd0NBU08scUJBQU0sTUFBQSxBQUFLLE1BVGxCLEFBU08sQUFBaUIsQUFDL0I7O3dDQUFBLEFBQVEsSUFWRCxBQVVQLEFBQVk7Z0RBVkw7Z0RBQUE7dUNBWW9CLGNBQUEsQUFBSyxJQVp6QixBQVlvQixBQUFTOztpQ0FBMUI7QUFaSCxvREFBQTtnREFBQTs2Q0FhRyxBQUFNLFFBQU4sQUFBYyxjQUFkLEFBQTRCLGNBQTVCLEFBQTBDOzBDQUN0QyxTQUQyQyxBQUMzQyxBQUFTLEFBQ2Y7MkNBQU8sY0FBQSxBQUFLLE1BQUwsQUFBVyxNQUFYLEFBQWlCLFVBZnpCLEFBYUcsQUFBK0MsQUFFMUMsQUFBMkI7QUFGZSxBQUNqRCxpQ0FERTs7aUNBSU47K0NBQUEsQUFBTywwQkFBd0IsTUFBQSxBQUFLLE1BakJqQyxBQWlCSCxBQUEwQztnREFqQnZDO0FBQUE7O2lDQUFBO2dEQUFBO2dFQW1CSDs7c0NBQUEsQUFBSyxTQUFTLEVBQUUsY0FBYyxZQW5CM0IsQUFtQkgsQUFBYyxBQUFvQjs7aUNBbkIvQjtpQ0FBQTtnREFBQTs7QUFBQTt5Q0FBQTtBOzs7Ozs7Ozs7O2lDQXVCRixBQUNMO21DQUNJLEFBQUMsdUNBQUssVUFBVSxLQUFoQixBQUFxQixVQUFVLE9BQU8sQ0FBQyxDQUFDLEtBQUEsQUFBSyxNQUE3QyxBQUFtRDs4QkFBbkQ7Z0NBQUEsQUFDSTtBQURKO2FBQUEsa0JBQ0ssY0FBRCxzQkFBQSxBQUFNOzs4QkFBTjtnQ0FBQSxBQUNJO0FBREo7QUFBQSwrQkFDSyxjQUFELHNCQUFBLEFBQU07OzhCQUFOO2dDQUFBLEFBQ0k7QUFESjtBQUFBLDZDQUNJLEFBQUMsc0JBQUQsQUFBTTt1QkFDSyxLQUFBLEFBQUssTUFEaEIsQUFDc0IsQUFDbEI7MEJBQVUsS0FGZCxBQUVtQixBQUNmO3VCQUhKLEFBSUk7dUJBSkosQUFJVSxBQUNOO3lCQUxKLEFBS2EsQUFDVDs2QkFOSixBQU1nQjs7OEJBTmhCO2dDQUhaLEFBQ0ksQUFDSSxBQUNJLEFBV1I7QUFYUTtBQUNJLGtDQVVaLEFBQUM7dUJBQUQsQUFFSTt3QkFGSixBQUVXLEFBQ1A7eUJBQVMsS0FBQSxBQUFLLE1BSGxCLEFBR3dCOzs4QkFIeEI7Z0NBZEosQUFjSSxBQUtBO0FBTEE7QUFDSSxnQ0FJSixBQUFDLHlDQUFPLFNBQVIsTUFBZ0IsU0FBUyxLQUFBLEFBQUssTUFBOUIsQUFBb0M7OEJBQXBDO2dDQUFBO0FBQUE7ZUFwQlIsQUFDSSxBQW1CSSxBQUtYOzs7OztBQTFEdUIsQSxBQTZENUI7O2tCQUFBLEFBQWUiLCJmaWxlIjoiRGVjbGFyZVdpbm5lci5qcyIsInNvdXJjZVJvb3QiOiIvaG9tZS9nYXV0YW0vcHJvamVjdHMvc29saWRpdHlfbGVhcm4vd2FnZXIifQ==

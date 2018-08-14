@@ -1,0 +1,5 @@
+runtime: nodejs8
+
+handlers:
+- url: /.*
+  script: server.js # Note as of March 13, handlers are not yet obeyed.
